@@ -109,27 +109,29 @@ game.onUpdateInterval(1000, function () {
     spaceenemy.setVelocity(randint(-55, -40), 0)
     spaceenemy.setPosition(160, randint(5, 115))
     spaceenemy.setFlag(SpriteFlag.AutoDestroy, true)
-    if (Math.percentChance(15)) {
-        ammo = sprites.create(img`
-            . . . . . e e e e e e . . . . . 
-            . . . e e 5 5 5 5 5 5 e e . . . 
-            . . e e 5 5 5 5 5 5 5 5 e e . . 
-            . e e 9 d 5 5 5 5 5 5 5 5 e e . 
-            . e 9 d 5 5 5 5 5 1 1 1 5 5 e . 
-            e 4 d d 5 5 5 5 5 1 1 1 5 5 5 e 
-            e 4 d 5 5 5 5 5 5 1 1 1 5 5 5 e 
-            e 4 4 5 5 5 5 5 5 5 5 5 1 5 5 e 
-            e 5 4 d 5 5 5 5 5 5 5 5 5 5 5 e 
-            e 5 4 4 5 5 5 5 5 5 5 5 5 d 5 e 
-            e 5 d 4 4 5 5 5 5 5 5 5 d d 5 e 
-            . e 5 4 4 4 d 5 5 5 5 d d 5 e . 
-            . e d 5 4 4 4 4 4 4 4 d 5 e e . 
-            . . e d 5 d 4 4 4 4 5 5 e e . . 
-            . . . e e 5 5 5 5 5 5 e e . . . 
-            . . . . . e e e e e e . . . . . 
-            `, SpriteKind.Ammo)
-        ammo.setVelocity(-70, 0)
-        ammo.setPosition(160, randint(5, 115))
-        ammo.setFlag(SpriteFlag.AutoDestroy, true)
+    if (statusbar_ammo.value <= 40) {
+        if (Math.percentChance(15)) {
+            ammo = sprites.create(img`
+                . . . . . e e e e e e . . . . . 
+                . . . e e 5 5 5 5 5 5 e e . . . 
+                . . e e 5 5 5 5 5 5 5 5 e e . . 
+                . e e 9 d 5 5 5 5 5 5 5 5 e e . 
+                . e 9 d 5 5 5 5 5 1 1 1 5 5 e . 
+                e 4 d d 5 5 5 5 5 1 1 1 5 5 5 e 
+                e 4 d 5 5 5 5 5 5 1 1 1 5 5 5 e 
+                e 4 4 5 5 5 5 5 5 5 5 5 1 5 5 e 
+                e 5 4 d 5 5 5 5 5 5 5 5 5 5 5 e 
+                e 5 4 4 5 5 5 5 5 5 5 5 5 d 5 e 
+                e 5 d 4 4 5 5 5 5 5 5 5 d d 5 e 
+                . e 5 4 4 4 d 5 5 5 5 d d 5 e . 
+                . e d 5 4 4 4 4 4 4 4 d 5 e e . 
+                . . e d 5 d 4 4 4 4 5 5 e e . . 
+                . . . e e 5 5 5 5 5 5 e e . . . 
+                . . . . . e e e e e e . . . . . 
+                `, SpriteKind.Ammo)
+            ammo.setVelocity(-70, 0)
+            ammo.setPosition(160, randint(5, 115))
+            ammo.setFlag(SpriteFlag.AutoDestroy, true)
+        }
     }
 })
