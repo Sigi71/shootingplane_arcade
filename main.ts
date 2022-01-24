@@ -6,31 +6,31 @@ namespace StatusBarKind {
 }
 function StartNewPlane () {
     plane = sprites.create(img`
-        ..ccc.........ffffff....
-        ..f4cc.......fcc22ff....
-        ..f44cc...fffccccff.....
-        ..f244cccc22224442cc....
-        ..f224cc2222222244b9c...
-        ..cf2222222222222b999c..
-        .c22c222222222b11199b2c.
-        f22ccccccc222299111b222c
-        fffffcc222c222222222222f
-        .....f2222442222222222f.
-        ....f222244fc2222222ff..
-        ...c222244ffffffffff....
-        ...c2222cfffc2f.........
-        ...ffffffff2ccf.........
-        .......ffff2cf..........
-        ........fffff...........
+        ..fff.........ffffff....
+        ..f8ff.......fff66ff....
+        ..f88ff...fffffffff.....
+        ..f688ffff66668886ff....
+        ..f668ff6666666688f9f...
+        ..ff6666666666666f999f..
+        .f66f666666666f11199f6f.
+        f66fffffff666699111f666f
+        fffffff666f666666666666f
+        .....f6666886666666666f.
+        ....f666688ff6666666ff..
+        ...f666688ffffffffff....
+        ...f6666fff.............
+        ...fffffff..............
+        ........................
+        ........................
         `, SpriteKind.Player)
     statusbar_ammo = statusbars.create(20, 4, StatusBarKind.Ammo)
     statusbar_ammo.value = 50
     statusbar_ammo.max = 50
-    statusbar_ammo.setColor(5, 15)
+    statusbar_ammo.setColor(9, 15)
     statusbar_ammo.attachToSprite(plane)
     plane.x += -50
     controller.moveSprite(plane, 200, 200)
-    plane.startEffect(effects.bubbles, 100)
+    plane.startEffect(effects.trail, 100)
     plane.setStayInScreen(true)
 }
 controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
@@ -41,13 +41,13 @@ controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
             . . . . . . . . . . . . . . . . 
             . . . . . . . . . . . . . . . . 
             . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . 4 4 . . . . . . . 
-            . . . . . . 4 5 5 4 . . . . . . 
-            . . . . . . 2 5 5 2 . . . . . . 
-            . . . . . . . 2 2 . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
+            . . . 1 1 . . . . . . . . . . . 
+            . . . . 1 1 . . . . . . . . . . 
+            . . 2 1 1 f 5 f 1 1 1 8 . . . . 
+            . 4 5 1 1 5 f 5 1 1 1 8 8 2 . . 
+            . . 2 1 1 f 5 f 1 1 1 8 . . . . 
+            . . . . 1 1 . . . . . . . . . . 
+            . . . 1 1 . . . . . . . . . . . 
             . . . . . . . . . . . . . . . . 
             . . . . . . . . . . . . . . . . 
             . . . . . . . . . . . . . . . . 
@@ -57,28 +57,68 @@ controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
         statusbar_ammo.value += -1
     }
 })
+info.onCountdownEnd(function () {
+    info.changeLifeBy(1)
+})
 // Zasah letadla bublinou
 sprites.onOverlap(SpriteKind.Enemy, SpriteKind.Player, function (sprite, otherSprite) {
     plane.destroy()
     scene.cameraShake(3, 500)
     info.changeLifeBy(-1)
     for (let value of sprites.allOfKind(SpriteKind.Enemy)) {
-        value.destroy(effects.bubbles, 10)
+        value.destroy(effects.fire, 10)
     }
     StartNewPlane()
 })
 info.onLifeZero(function () {
-    game.over(false, effects.splatter)
+    game.over(false, effects.melt)
 })
 sprites.onOverlap(SpriteKind.Ammo, SpriteKind.Player, function (sprite, otherSprite) {
-    ammo.destroy(effects.starField, 100)
+    sprite.setImage(img`
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . 2 . 
+        . . . . . . 5 . . 5 5 . . 1 1 1 
+        . . 5 . . 5 5 . 5 . . 5 . f 5 f 
+        . 5 5 5 . . 5 . 5 . . 5 . 5 f 5 
+        . . 5 . . . 5 . 5 . . 5 . 1 1 1 
+        . . . . . . 5 . . 5 5 . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        `)
+    ammo.destroy(effects.starField, 1000)
     statusbar_ammo.value += 10
 })
 // Sestreleni bubliny
 sprites.onOverlap(SpriteKind.Projectile, SpriteKind.Enemy, function (sprite, otherSprite) {
+    otherSprite.setImage(img`
+        . 3 . . . . . . . . . . . 4 . . 
+        . 3 3 . . . . . . . . . 4 4 . . 
+        . 3 d 3 . . 4 4 . . 4 4 d 4 . . 
+        . . 3 5 3 4 5 5 4 4 d d 4 4 . . 
+        . . 3 d 5 d 1 1 d 5 5 d 4 4 . . 
+        . . 4 5 5 1 1 1 1 5 1 1 5 4 . . 
+        . 4 5 5 5 5 1 1 5 1 1 1 d 4 4 . 
+        . 4 d 5 1 1 5 5 5 1 1 1 5 5 4 . 
+        . 4 4 5 1 1 5 5 5 5 5 d 5 5 4 . 
+        . . 4 3 d 5 5 5 d 5 5 d d d 4 . 
+        . 4 5 5 d 5 5 5 d d d 5 5 4 . . 
+        . 4 5 5 d 3 5 d d 3 d 5 5 4 . . 
+        . 4 4 d d 4 d d d 4 3 d d 4 . . 
+        . . 4 5 4 4 4 4 4 4 4 4 4 . . . 
+        . 4 5 4 . . 4 4 4 . . . 4 4 . . 
+        . 4 4 . . . . . . . . . . 4 4 . 
+        `)
     otherSprite.destroy(effects.fire, 500)
     info.changeScoreBy(1)
     projectile.destroy()
+    info.startCountdown(20)
 })
 let spaceenemy: Sprite = null
 let ammo: Sprite = null
@@ -89,22 +129,22 @@ StartNewPlane()
 info.setLife(3)
 game.onUpdateInterval(1000, function () {
     spaceenemy = sprites.create(img`
-        . . . . . b b b b b b . . . . . 
-        . . . b b 9 9 9 9 9 9 b b . . . 
-        . . b b 9 9 9 9 9 9 9 9 b b . . 
-        . b b 9 d 9 9 9 9 9 9 9 9 b b . 
-        . b 9 d 9 9 9 9 9 1 1 1 9 9 b . 
-        b 9 d d 9 9 9 9 9 1 1 1 9 9 9 b 
-        b 9 d 9 9 9 9 9 9 1 1 1 9 9 9 b 
-        b 9 3 9 9 9 9 9 9 9 9 9 1 9 9 b 
-        b 5 3 d 9 9 9 9 9 9 9 9 9 9 9 b 
-        b 5 3 3 9 9 9 9 9 9 9 9 9 d 9 b 
-        b 5 d 3 3 9 9 9 9 9 9 9 d d 9 b 
-        . b 5 3 3 3 d 9 9 9 9 d d 5 b . 
-        . b d 5 3 3 3 3 3 3 3 d 5 b b . 
-        . . b d 5 d 3 3 3 3 5 5 b b . . 
-        . . . b b 5 5 5 5 5 5 b b . . . 
-        . . . . . b b b b b b . . . . . 
+        . . . . . . . . c c c c . . . . 
+        . . . . c c c c c c c c c . . . 
+        . . . c f c c a a a a c a c . . 
+        . . c c f f f f a a a c a a c . 
+        . . c c a f f c a a f f f a a c 
+        . . c c a a a a b c f f f a a c 
+        . c c c c a c c b a f c a a c c 
+        c a f f c c c a b b 6 b b b c c 
+        c a f f f f c c c 6 b b b a a c 
+        c a a c f f c a 6 6 b b b a a c 
+        c c b a a a a b 6 b b a b b a . 
+        . c c b b b b b b b a c c b a . 
+        . . c c c b c c c b a a b c . . 
+        . . . . c b a c c b b b c . . . 
+        . . . . c b b a a 6 b c . . . . 
+        . . . . . . b 6 6 c c . . . . . 
         `, SpriteKind.Enemy)
     spaceenemy.setVelocity(randint(-55, -40), 0)
     spaceenemy.setPosition(160, randint(5, 115))
@@ -112,22 +152,26 @@ game.onUpdateInterval(1000, function () {
     if (statusbar_ammo.value <= 40) {
         if (Math.percentChance(15)) {
             ammo = sprites.create(img`
-                . . . . . e e e e e e . . . . . 
-                . . . e e 5 5 5 5 5 5 e e . . . 
-                . . e e 5 5 5 5 5 5 5 5 e e . . 
-                . e e 9 d 5 5 5 5 5 5 5 5 e e . 
-                . e 9 d 5 5 5 5 5 1 1 1 5 5 e . 
-                e 4 d d 5 5 5 5 5 1 1 1 5 5 5 e 
-                e 4 d 5 5 5 5 5 5 1 1 1 5 5 5 e 
-                e 4 4 5 5 5 5 5 5 5 5 5 1 5 5 e 
-                e 5 4 d 5 5 5 5 5 5 5 5 5 5 5 e 
-                e 5 4 4 5 5 5 5 5 5 5 5 5 d 5 e 
-                e 5 d 4 4 5 5 5 5 5 5 5 d d 5 e 
-                . e 5 4 4 4 d 5 5 5 5 d d 5 e . 
-                . e d 5 4 4 4 4 4 4 4 d 5 e e . 
-                . . e d 5 d 4 4 4 4 5 5 e e . . 
-                . . . e e 5 5 5 5 5 5 e e . . . 
-                . . . . . e e e e e e . . . . . 
+                ....................
+                ....................
+                ....................
+                ....................
+                ....................
+                ....................
+                .....7977777777.....
+                .....7777777777.....
+                ......66666666......
+                ......77777777......
+                .....7797777777.....
+                .....751f5f1177.....
+                .....2415f51127.....
+                .....751f5f1177.....
+                .....7777777777.....
+                .....7777777776.....
+                .....7777777776.....
+                ......76666666......
+                ....................
+                ....................
                 `, SpriteKind.Ammo)
             ammo.setVelocity(-70, 0)
             ammo.setPosition(160, randint(5, 115))
