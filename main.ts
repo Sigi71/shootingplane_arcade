@@ -57,9 +57,6 @@ controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
         statusbar_ammo.value += -1
     }
 })
-info.onCountdownEnd(function () {
-    info.changeLifeBy(1)
-})
 // Zasah letadla bublinou
 sprites.onOverlap(SpriteKind.Enemy, SpriteKind.Player, function (sprite, otherSprite) {
     plane.destroy()
@@ -118,7 +115,6 @@ sprites.onOverlap(SpriteKind.Projectile, SpriteKind.Enemy, function (sprite, oth
     otherSprite.destroy(effects.fire, 500)
     info.changeScoreBy(1)
     projectile.destroy()
-    info.startCountdown(20)
 })
 let spaceenemy: Sprite = null
 let ammo: Sprite = null
