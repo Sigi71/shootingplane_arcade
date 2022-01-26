@@ -4,7 +4,7 @@ namespace SpriteKind {
 namespace StatusBarKind {
     export const Ammo = StatusBarKind.create()
 }
-function StartNewPlane () {
+function StartNewPlane (speed: number) {
     plane = sprites.create(img`
         ..fff.........ffffff....
         ..f8ff.......fff66ff....
@@ -29,7 +29,7 @@ function StartNewPlane () {
     statusbar_ammo.setColor(9, 15)
     statusbar_ammo.attachToSprite(plane)
     plane.x += -50
-    controller.moveSprite(plane, 200, 200)
+    controller.moveSprite(plane, speed, speed)
     plane.startEffect(effects.trail, 100)
     plane.setStayInScreen(true)
 }
@@ -65,7 +65,7 @@ sprites.onOverlap(SpriteKind.Enemy, SpriteKind.Player, function (sprite, otherSp
     for (let value of sprites.allOfKind(SpriteKind.Enemy)) {
         value.destroy(effects.fire, 10)
     }
-    StartNewPlane()
+    StartNewPlane(planespeed)
 })
 info.onLifeZero(function () {
     game.over(false, effects.melt)
@@ -89,8 +89,31 @@ sprites.onOverlap(SpriteKind.Ammo, SpriteKind.Player, function (sprite, otherSpr
         . . . . . . . . . . . . . . . . 
         . . . . . . . . . . . . . . . . 
         `)
-    ammo.destroy(effects.starField, 1000)
+    sprite.destroy(effects.starField, 1000)
     statusbar_ammo.value += 10
+})
+// Sestreleni bubliny
+sprites.onOverlap(SpriteKind.Projectile, SpriteKind.Ammo, function (sprite, otherSprite) {
+    otherSprite.setImage(img`
+        . 3 . . . . . . . . . . . 4 . . 
+        . 3 3 . . . . . . . . . 4 4 . . 
+        . 3 d 3 . . 4 4 . . 4 4 d 4 . . 
+        . . 3 5 3 4 5 5 4 4 d d 4 4 . . 
+        . . 3 d 5 d 1 1 d 5 5 d 4 4 . . 
+        . . 4 5 5 1 1 1 1 5 1 1 5 4 . . 
+        . 4 5 5 5 5 1 1 5 1 1 1 d 4 4 . 
+        . 4 d 5 1 1 5 5 5 1 1 1 5 5 4 . 
+        . 4 4 5 1 1 5 5 5 5 5 d 5 5 4 . 
+        . . 4 3 d 5 5 5 d 5 5 d d d 4 . 
+        . 4 5 5 d 5 5 5 d d d 5 5 4 . . 
+        . 4 5 5 d 3 5 d d 3 d 5 5 4 . . 
+        . 4 4 d d 4 d d d 4 3 d d 4 . . 
+        . . 4 5 4 4 4 4 4 4 4 4 4 . . . 
+        . 4 5 4 . . 4 4 4 . . . 4 4 . . 
+        . 4 4 . . . . . . . . . . 4 4 . 
+        `)
+    otherSprite.destroy(effects.fire, 500)
+    projectile.destroy()
 })
 // Sestreleni bubliny
 sprites.onOverlap(SpriteKind.Projectile, SpriteKind.Enemy, function (sprite, otherSprite) {
@@ -116,12 +139,14 @@ sprites.onOverlap(SpriteKind.Projectile, SpriteKind.Enemy, function (sprite, oth
     info.changeScoreBy(1)
     projectile.destroy()
 })
-let spaceenemy: Sprite = null
 let ammo: Sprite = null
+let spaceenemy: Sprite = null
 let projectile: Sprite = null
 let statusbar_ammo: StatusBarSprite = null
 let plane: Sprite = null
-StartNewPlane()
+let planespeed = 0
+planespeed = 50
+StartNewPlane(planespeed)
 info.setLife(3)
 game.onUpdateInterval(1000, function () {
     spaceenemy = sprites.create(img`
