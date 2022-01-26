@@ -3,13 +3,17 @@
     "description": "",
     "dependencies": {
         "device": "*",
-        "pxt-status-bar": "github:jwunderl/pxt-status-bar#v0.4.1"
+        "pxt-status-bar": "github:jwunderl/pxt-status-bar#v0.4.1",
+        "pxt-skillmap-sample": "github:microsoft/pxt-skillmap-sample#b36c62725e3fe26fca25b64cf158878b5fccd9be",
+        "Timers": "github:microsoft/arcade-timers#v1.1.0"
     },
     "files": [
         "main.blocks",
         "main.ts",
         "README.md",
-        "assets.json"
+        "assets.json",
+        "tilemap.g.jres",
+        "tilemap.g.ts"
     ],
     "testFiles": [
         "test.ts"
