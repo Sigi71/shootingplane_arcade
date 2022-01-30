@@ -94,7 +94,7 @@ function Level2_spawnEnemy () {
 }
 // Zasah letadla bublinou
 sprites.onOverlap(SpriteKind.Enemy, SpriteKind.Player, function (sprite, otherSprite) {
-    plane.destroy()
+    otherSprite.destroy()
     scene.cameraShake(3, 500)
     info.changeLifeBy(-1)
     for (let value of sprites.allOfKind(SpriteKind.Enemy)) {
@@ -172,7 +172,7 @@ sprites.onOverlap(SpriteKind.Projectile, SpriteKind.Ammo, function (sprite, othe
         . 4 4 . . . . . . . . . . 4 4 . 
         `)
     otherSprite.destroy(effects.fire, 500)
-    projectile.destroy()
+    sprite.destroy()
 })
 // Sestreleni bubliny
 sprites.onOverlap(SpriteKind.Projectile, SpriteKind.Enemy, function (sprite, otherSprite) {
@@ -196,7 +196,7 @@ sprites.onOverlap(SpriteKind.Projectile, SpriteKind.Enemy, function (sprite, oth
         `)
     otherSprite.destroy(effects.fire, 500)
     info.changeScoreBy(1)
-    projectile.destroy()
+    sprite.destroy()
 })
 let ammo: Sprite = null
 let spaceenemy: Sprite = null
